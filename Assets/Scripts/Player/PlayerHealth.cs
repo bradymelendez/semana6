@@ -2,60 +2,65 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class PlayerHealth : MonoBehaviour
 {
-    public int maxHealth = 100; // Salud máxima del jugador.
-    private int currentHealth; // Salud actual del jugador.
 
-    public Text healthText; // Referencia al texto para mostrar la salud en UI.
+    public int maxHealth = 100;
+    private int currentHealth;
 
-    private GameManager gameManager; // Referencia al GameManager.
+    public TMP_Text healthText; // Cambia de Text a TMP_Text
+
+    private GameManager gameManager;
 
     private void Awake()
     {
-        // Obtener la referencia al GameManager.
         gameManager = GameManager.Instance;
     }
 
     private void Start()
     {
-        currentHealth = maxHealth; // Inicializar la salud actual con el valor máximo.
-        UpdateHealthUI(); // Actualizar la UI de salud al inicio.
+        currentHealth = maxHealth;
+        UpdateHealthUI();
     }
 
     public void TakeDamage(int damage)
     {
-        // Verificar si el juego ya terminó (jugador derrotado).
         if (gameManager.IsGameOver)
         {
             return;
         }
 
-        // Reducir la salud del jugador según el daño recibido.
         currentHealth -= damage;
-
-        // Actualizar la salud del jugador en el GameManager.
         gameManager.UpdatePlayerHealth(currentHealth);
 
-        // Verificar si el jugador ha quedado sin salud.
         if (currentHealth <= 0)
         {
-            currentHealth = 0; // Asegurarse de que la salud no sea negativa.
-
-            // El jugador ha sido derrotado, notificar al GameManager.
+            currentHealth = 0;
             gameManager.PlayerDefeated();
         }
 
-        UpdateHealthUI(); // Actualizar la UI de salud después de recibir daño.
+        UpdateHealthUI();
     }
 
     private void UpdateHealthUI()
     {
-        // Actualizar el texto de la salud en la UI (si tienes un objeto de texto para mostrar la salud).
         if (healthText != null)
         {
             healthText.text = "Health: " + currentHealth.ToString();
+        }
+        else
+        {
+            Debug.LogWarning("El componente 'TextMeshProUGUI' de salud no está asignado en el inspector.");
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            TakeDamage(10);
         }
     }
 }
