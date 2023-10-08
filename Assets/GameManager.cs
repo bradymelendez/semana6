@@ -8,11 +8,13 @@ public class GameManager : MonoBehaviour
     public Text timeText;
     public Text enemiesText;
     public Text playerHealthText;
+    public static GameManager Instance;
 
     public int currentLevel = 1;
     public float timeElapsed = 0f;
     public int enemiesKilled = 0;
     public int playerHealth = 100;
+
 
     private bool gameEnded = false;
     private void Update()
@@ -39,6 +41,18 @@ public class GameManager : MonoBehaviour
             {
                 EndGame();
             }
+        }
+    }
+    private void Awake()
+    {
+        // Configura la referencia estática.
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject); // Si ya existe una instancia, destruye esta.
         }
     }
     public void PlayerHit(int damage)
