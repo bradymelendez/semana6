@@ -4,22 +4,36 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance; // Referencia estática al GameManager.
+
     public Text levelText;
     public Text timeText;
     public Text enemiesText;
     public Text playerHealthText;
-    public static GameManager Instance;
 
     public int currentLevel = 1;
     public float timeElapsed = 0f;
     public int enemiesKilled = 0;
     public int playerHealth = 100;
 
+    public bool IsGameOver { get; private set; } // Variable de estado del juego.
 
-    private bool gameEnded = false;
+    private void Awake()
+    {
+        // Configura la referencia estática.
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject); // Si ya existe una instancia, destruye esta.
+        }
+    }
+
     private void Update()
     {
-        if (!gameEnded)
+        if (!IsGameOver)
         {
             timeElapsed += Time.deltaTime;
 
@@ -43,33 +57,21 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-    private void Awake()
+
+    public void UpdatePlayerHealth(int health)
     {
-        // Configura la referencia estática.
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject); // Si ya existe una instancia, destruye esta.
-        }
+        playerHealth = health;
+        playerHealthText.text = "Vida: " + playerHealth;
     }
-    public void PlayerHit(int damage)
+
+    public void PlayerDefeated()
     {
-        if (!gameEnded)
-        {
-            playerHealth -= damage;
-            // Actualizar la interfaz de usuario con la nueva vida del jugador.
-            if (playerHealth <= 0)
-            {
-                EndGame();
-            }
-        }
+        IsGameOver = true;
+        EndGame(); // Llamar a EndGame cuando el jugador sea derrotado.
     }
+
     private void EndGame()
     {
-        gameEnded = true;
         // Agregar aquí la lógica para finalizar el juego, mostrar la pantalla de derrota o victoria, etc.
         if (playerHealth <= 0)
         {
@@ -81,3 +83,4 @@ public class GameManager : MonoBehaviour
         }
     }
 }
+
