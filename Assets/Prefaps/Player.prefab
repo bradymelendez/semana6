@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5815077325118340868}
   - component: {fileID: 5815077325118340867}
   - component: {fileID: -3144627636490239537}
+  - component: {fileID: -3125289511396031754}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -95,7 +96,7 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5170036157002439954}
   m_Material: {fileID: 13400000, guid: b38a6b220d6a77342bbcf8007eca96b2, type: 2}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.5
   m_Height: 2
@@ -113,7 +114,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68b51c709b4b9ca49a3d0411daa976ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialHealth: 100
+  maxHealth: 100
+  healthText: {fileID: 0}
 --- !u!114 &5815077325118340867
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -145,3 +147,17 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!136 &-3125289511396031754
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5170036157002439954}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.43642887
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: -0.015986234, y: 0, z: 0}
