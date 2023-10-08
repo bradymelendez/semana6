@@ -1,18 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class PlayerHealth : MonoBehaviour
 {
+    public int maxHealth = 100; 
+    public int currentHealth; 
+    public TMP_Text healthText; 
 
-    public int maxHealth = 100;
-    private int currentHealth;
-
-    public TMP_Text healthText; // Cambia de Text a TMP_Text
-
-    private GameManager gameManager;
+    private GameManager gameManager; 
 
     private void Awake()
     {
@@ -21,23 +18,32 @@ public class PlayerHealth : MonoBehaviour
 
     private void Start()
     {
-        currentHealth = maxHealth;
-        UpdateHealthUI();
+        currentHealth = maxHealth; 
+        UpdateHealthUI(); 
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            TakeDamage(1); 
+        }
     }
 
     public void TakeDamage(int damage)
     {
-        if (gameManager.IsGameOver)
+        currentHealth -= damage;
+
+        if (gameManager == null)
         {
             return;
         }
 
-        currentHealth -= damage;
         gameManager.UpdatePlayerHealth(currentHealth);
 
         if (currentHealth <= 0)
         {
-            currentHealth = 0;
+            currentHealth = 0; 
             gameManager.PlayerDefeated();
         }
 
@@ -49,18 +55,6 @@ public class PlayerHealth : MonoBehaviour
         if (healthText != null)
         {
             healthText.text = "Health: " + currentHealth.ToString();
-        }
-        else
-        {
-            Debug.LogWarning("El componente 'TextMeshProUGUI' de salud no está asignado en el inspector.");
-        }
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            TakeDamage(10);
         }
     }
 }
