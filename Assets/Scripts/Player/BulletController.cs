@@ -4,22 +4,40 @@ using UnityEngine;
 
 public class BulletController : MonoBehaviour
 {
-    public float bulletSpeed = 10f; 
-    public float bulletLifetime = 2f; 
+    public int damage = 10; // Cantidad de daño que hace la bala.
+    public float bulletSpeed = 10f; // Velocidad de la bala.
+
+    private Rigidbody rb;
 
     private void Start()
     {
-        Rigidbody bulletRigidbody = GetComponent<Rigidbody>();
-        bulletRigidbody.velocity = transform.forward * bulletSpeed;
+        rb = GetComponent<Rigidbody>();
 
-        Destroy(gameObject, bulletLifetime);
+        // Obtener la dirección de disparo (por ejemplo, hacia adelante en la dirección de rotación del GameObject).
+        Vector3 bulletDirection = transform.forward;
+
+        // Aplicar una velocidad inicial a la bala en la dirección de disparo.
+        rb.velocity = bulletDirection * bulletSpeed;
+
+        // Destruir la bala después de un tiempo si no colisiona con nada.
+        Destroy(gameObject, 3f); // Por ejemplo, destruir la bala después de 3 segundos.
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-
-        if (collision.gameObject.CompareTag("Enemy"))
+        // Verificar si la colisión involucra un objeto con el tag "Enemy".
+        if (other.CompareTag("Enemy"))
         {
+            // Obtener una referencia al script EnemyController del enemigo.
+            EnemyController enemy = other.GetComponent<EnemyController>();
+
+            // Aplicar daño al enemigo si se encuentra el componente EnemyController.
+            if (enemy != null)
+            {
+                enemy.TakeDamage(damage);
+            }
+
+            // Destruir la bala al colisionar con un enemigo.
             Destroy(gameObject);
         }
     }
